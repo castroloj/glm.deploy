@@ -1,0 +1,20 @@
+Package: glm.deploy
+Type: Package
+Title: Generates the source code of the scoring algorithm (predict) of a GLM object to C or JAVA to deploy/operationalize it outside R.
+Version: 1.0.0
+Author@s: c(person("Oscar","Castro-Lopez",email="oscarcastro@uas.edu.mx", role=c("aut","cre")), person("Ines", "Vega-Lopez"), role=c("aut","cre"))
+Author: Oscar Castro-Lopez, Ines Vega-Lopez
+Maintainer: Oscar J. Castro-López <oscarcastro@uas.edu.mx>
+License: GPL (>= 2.1)
+Description: The glm.deploy models allows to generate the specific scoring algorithm (predict) of a trained model in C or JAVA source code. Allowing to deploy/operationalize gerealized linear models (glm) outside R. It generates two functions: 1) the equivalent to predict(type="response") and 2) the equivalent to predict(type="link").
+URL: TBC
+BugReports: TBC
+Encoding: UTF-8
+LazyData: true
+Imports: Rcpp (>= 0.12.12)
+LinkingTo: Rcpp
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr

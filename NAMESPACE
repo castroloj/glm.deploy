@@ -1,0 +1,5 @@
+#exportPattern("^[[:alpha:]]+")
+export("glm2c",
+       "glm2java")
+importFrom(Rcpp, evalCpp, cppFunction)
+useDynLib(glm.deploy, .registration = TRUE)
