@@ -1,27 +1,11 @@
----
-output:
-  md_document:
-    variant: markdown_github
----
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
-```
-
 # glm.deploy
 
 Generates the source code of the scoring algorithm (predict) of a GLM object to C or JAVA to deploy/operationalize it outside R.
 
-#Output options
+## Output options
 At this stage output source code availables are: C and Java.
 
-#Link Function Compatibility
+## Link Function Compatibility
 The link functions compatible are: identity, probit, cloglog, log, sqrt, inverse, 1/mu^2, logit
 
 ## Example
