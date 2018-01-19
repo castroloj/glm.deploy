@@ -3,10 +3,18 @@
 Generates the source code of the scoring algorithm (predict) of a GLM object to C or JAVA to deploy/operationalize it outside R.
 
 ## Output options
-At this stage output source code availables are: C and Java.
+In this initial version the output source codes available are C and Java.
 
 ## Link Function Compatibility
-The link functions compatible are: identity, probit, cloglog, log, sqrt, inverse, 1/mu^2, logit
+The link functions compatible are:
+  - identity, 
+  - probit
+  - cloglog
+  - log
+  - sqrt
+  - inverse
+  - 1/mu^2
+  - logit.
 
 ## Example
 
@@ -22,6 +30,11 @@ This is a basic example with the iris dataset to create a glm object and pass it
   glm2c(model)
   glm2java(model)
 ```
+This would create two files, each file with two predict functions one equivalent to the predict(type="response") and other equivalent to the predict(type="link").
+
+`glm2c()` will create the c source code in the file "glm_virginica.c"
+
+`glm2java()` will create the java source code "glm_virgnica_class.java"
 
 ## Author
 

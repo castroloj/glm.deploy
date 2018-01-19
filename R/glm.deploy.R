@@ -19,14 +19,9 @@
 #' @description the glm.deploy package allows to generate source code from glm objects to deploy/operationalize the scoring/predict functions outside R.
 #' glm.deploy is used to generate the scoring functions of a trained GLM model in C or JAVA.
 #' It should not be called directly
-glm.deploy <- function(model, filename=NULL, language) {
-  if (! inherits(model, "glm")) stop("ERROR: Not a glm object")
-
-#    switch(language,
- #        ANSIC={language=0},
-#         JAVA={language=1},
-#         stop("Enter a valid output language: ANSIC, JAVA!")
-#  )
+glm.deploy <- function(model, filename = NULL, language) {
+  if (!inherits(model, "glm"))
+    stop("ERROR: Not a glm object")
 
   allcoefs = dummy.coef(model)
   Fields = c()
@@ -36,47 +31,62 @@ glm.deploy <- function(model, filename=NULL, language) {
   Arguments = attributes(model$terms)$dataClasses
   Factors = c()
   Factorsname = c()
-  Intercept_label = paste0("",names(attributes(model$terms)$dataClasses[1]))
+  Intercept_label = paste0("", names(attributes(model$terms)$dataClasses[1]))
   i = 1
   j = 1
   hasfactor = FALSE
-  for(x in 1:length(allcoefs)){
-    if(length(allcoefs[[x]]) == 1){
-      #print(names(allcoefs[x]))
+  for (x in 1:length(allcoefs)) {
+    if (length(allcoefs[[x]]) == 1) {
       Fields[i] = names(allcoefs[x])
       Factors[i] = NA
       Factorsname[i] = NA
       Coefficients[i] = allcoefs[[x]]
-      Types[i] = unname(Datatypes[grep(names(allcoefs[x]),names(Datatypes))])
+      Types[i] = unname(Datatypes[grep(names(allcoefs[x]), names(Datatypes))])
       i = i + 1
       j = j + 1
-    }else{##If data is factor
+    } else{
+      ##If data is factor
       hasfactor = TRUE
       j = j + 1
-      for(y in 1:length(allcoefs[[x]])){
-        Fields[i] = paste0(names(allcoefs[x]),names(allcoefs[[x]][y]))
+      for (y in 1:length(allcoefs[[x]])) {
+        Fields[i] = paste0(names(allcoefs[x]), names(allcoefs[[x]][y]))
         Factors[i] = names(allcoefs[[x]][y])
         Factorsname[i] = names(allcoefs[x])
         Coefficients[i] = allcoefs[[x]][y]
-        Types[i] = unname(Datatypes[grep(names(allcoefs[x]),names(Datatypes))])
+        Types[i] = unname(Datatypes[grep(names(allcoefs[x]), names(Datatypes))])
         i = i + 1
       }
     }
   }
   #Substitute invalid characters for variable names, and transform variable names to lower case
-  names(Arguments) = tolower(gsub("\\.","_",names(Arguments)))
-  Fields = tolower(gsub("\\.","_",Fields))
-  Intercept_label = tolower(gsub("\\.","_",Intercept_label))
+  names(Arguments) = tolower(gsub("\\.", "_", names(Arguments)))
+  Fields = tolower(gsub("\\.", "_", Fields))
+  Intercept_label = tolower(gsub("\\.", "_", Intercept_label))
   #UTF8 ENCODING
   Fields = enc2utf8(Fields)
   Intercept_label = enc2utf8(Intercept_label)
   Arguments = enc2utf8(Arguments)
 
-  tbl = data.frame(Field = Fields, Coefficient = Coefficients, Type = Types, Factor = Factors, Factorname = Factorsname)
-  if(is.null(filename)){
+  tbl = data.frame(
+    Field = Fields,
+    Coefficient = Coefficients,
+    Type = Types,
+    Factor = Factors,
+    Factorname = Factorsname
+  )
+  if (is.null(filename)) {
     filename = ""
   }
-  glmdeploy_cpp(tbl,Arguments,model$family$family, model$family$link,Intercept_label,hasfactor,filename,language)
+  glmdeploy_cpp(
+    tbl,
+    Arguments,
+    model$family$family,
+    model$family$link,
+    Intercept_label,
+    hasfactor,
+    filename,
+    language
+  )
 }
 
 #' @name glm2c
@@ -90,8 +100,8 @@ glm.deploy <- function(model, filename=NULL, language) {
 ##' @author Oscar J. Castro-Lopez, Ines F. Vega-Lopez
 ##' @examples
 #' glm2c(glm(Y ~ ., family = binomial(logit), data=data), "MyFileName")
-glm2c <- function(model, filename=NULL) {
-  glm.deploy(model,filename,0)
+glm2c <- function(model, filename = NULL) {
+  glm.deploy(model, filename, 0)
 }
 
 #' @name glm2java
@@ -105,6 +115,6 @@ glm2c <- function(model, filename=NULL) {
 ##' @author Oscar J. Castro-Lopez, Ines F. Vega-Lopez
 ##' @examples
 #' glm2java(glm(Y ~ ., family = binomial(logit), data=data), "MyFileName")
-glm2java <- function(model, filename=NULL) {
-  glm.deploy(model,filename,1)
+glm2java <- function(model, filename = NULL) {
+  glm.deploy(model, filename, 1)
 }
