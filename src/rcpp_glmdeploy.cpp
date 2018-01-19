@@ -136,8 +136,6 @@ std::string getMultiFooter(outlang lang){
   case CANSI:
     footer += "int main(int argc, char *argv[]){\n";
     footer += "//Generated\n";
-    footer += "printf(\"%f\\n\", virginica(5.7,2.5,5.0,2.0,-0.26351759));\n";//BORRAR
-    footer += "printf(\"%f\\n\", virginica_response(5.7,2.5,5.0,2.0,-0.26351759));\n";//BORRAR
     footer += "return 0;\n";
     footer += "}\n";
     break;

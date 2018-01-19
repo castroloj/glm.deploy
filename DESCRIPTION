@@ -6,7 +6,7 @@ Author@s: c(person("Oscar","Castro-Lopez",email="oscarcastro@uas.edu.mx", role=c
 Author: Oscar Castro-Lopez, Ines Vega-Lopez
 Maintainer: Oscar J. Castro-López <oscarcastro@uas.edu.mx>
 License: GPL (>= 2.1)
-Description: The glm.deploy models allows to generate the specific scoring algorithm (predict) of a trained model in C or JAVA source code. Allowing to deploy/operationalize gerealized linear models (glm) outside R. It generates two functions: 1) the equivalent to predict(type="response") and 2) the equivalent to predict(type="link").
+Description: The glm.deploy models allows to generate the specific scoring algorithm (predict) of a trained model in C or JAVA source code. Allowing to deploy/operationalize generalized linear models (glm) outside R. It generates two functions: 1) the equivalent to predict(type="response") and 2) the equivalent to predict(type="link").
 URL: https://github.com/oscarcastrolopez/glm.deploy
 BugReports: https://github.com/oscarcastrolopez/glm.deploy/issues
 Encoding: UTF-8
