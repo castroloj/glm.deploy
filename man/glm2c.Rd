@@ -2,23 +2,97 @@
 % Please edit documentation in R/glm.deploy.R
 \name{glm2c}
 \alias{glm2c}
-\title{glm to c source code to deploy/operationalize outside R}
+\title{C source code generator for rapid deployment of glm predictive models}
 \usage{
 glm2c(model, filename = NULL)
 }
 \arguments{
-\item{model}{A trained object of class "glm".}
+\item{model}{A fitted object of class "glm".}
 
-\item{filename}{The name of the file to save, if NULL the default is "glm_" plus the (intercept) variable name.}
+\item{filename}{OPTIONAL The name of the output file(s), the default filenames are "glm_xxx.c" and "glm_xxx.h", where xxx is the target variable's name.}
 }
 \description{
-glm2c is used to generate the scoring functions of a trained GLM model in the c language.\cr
-It generates a file with two functions:\cr
-1) The equivalent to predict(type="response").\cr
-2) The equivalent to predict(type="link").
+The \code{glm2c()} function is used to generate source code in C language
+implementing a given glm predictive model. It implements the following two functions;
+ the glm_xxx_response() and glm_xxx_link(), where xxx stands for the name of the target variable
+ of the glm object.\cr \cr
+After invocation of the \code{glm2c()} function two files are generated:\cr
+\itemize{
+  \item A .c file with the scoring functions.\cr
+  \item An .h file with the prototypes of the two functions of the .c file.\cr
+ }
+}
+\note{
+All numeric variables used in the glm object are treated as doubles, whereas factors variables are treated as strings.
 }
 \examples{
-glm2c(glm(Y ~ ., family = binomial(logit), data=data), "MyFileName")
+ #Example with the iris dataset with a Logical target and numeric variables, using the binomial family and the logit link function.
+ data(iris)
+ iristest = iris
+ iristest$Virginica = ifelse(iristest$Species == 'virginica', TRUE,FALSE)
+ iristest$Species = NULL
+
+ # Load Package
+ library(glm.deploy)
+ #For repeatable results:
+ set.seed(123)
+ #Call the glm2c() function:
+ glm2c(glm(Virginica ~ ., family = binomial(logit), data=iristest))
+
+ #The \\code{glm2c()} function generates the files "glm_virginica.c" and "glm_virginica.h":
+
+-------Contents of the "glm_virgninica.c" file---------------------------
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+double glm_virginica_link(double sepal_length, double sepal_width, double petal_length, double petal_width){
+  double new_sepal_length = -2.46522019518341 * sepal_length;
+  double new_sepal_width = -6.68088701405762 * sepal_width;
+  double new_petal_length = 9.4293851538836 * petal_length;
+  double new_petal_width = 18.2861368877881 * petal_width;
+
+  return -42.6378038127854+new_sepal_length+new_sepal_width+new_petal_length+new_petal_width;
+}
+double glm_virginica_response(double sepal_length, double sepal_width, double petal_length, double petal_width){
+  return 1/(1+exp(-glm_virginica_link(sepal_length, sepal_width, petal_length, petal_width)));
+}
+----End of Contents of the "glm_virgninica.c" file------------------------
+--------------------------------------------------------------------------
+
+-----Contents of the "glm_virgninica.h" file------------------------------
+double glm_virginica_link(double sepal_length, double sepal_width, double petal_length, double petal_width);
+double glm_virginica_response(double sepal_length, double sepal_width, double petal_length, double petal_width);
+-----End of Contents of the "glm_virgninica.h" file-----------------------
+--------------------------------------------------------------------------
+
+Usage of the functions in another programs;
+1) We need to add an include line #include "virginica_glm.h" in all program source files that use library definitions.
+2) Link the program .c file with the library object file.
+    gcc -c glm_virginica.c
+3) The following is an example file "test.c" to call the functions and print the result:
+-------------------"test.c"---------------------------------------------
+#include <stdio.h>
+#include "glm_virgnica.h"
+
+int main(int argc, char *argv[]){
+  printf("\%f\\n",glm_virginica_link(5.7,2.5,5.0,2.0));
+  printf("\%f\\n",glm_virginica_response(5.7,2.5,5.0,2.0));
+  return 0;
+}
+---------------End of "test.c"-------------------------------------------
+-------------------------------------------------------------------------
+
+4) Compile the "test.c" file and link it to the glm_virginica shared library, we also need to add the "-lm" option to link it to the math.h library:
+gcc test.c -o test glm_virginica.o -lm
+
+5) Finally Run the test.o program in linux:
+.\\test
+
+}
+\seealso{
+\code{\link{glm2java}}
 }
 \author{
 Oscar J. Castro-Lopez, Ines F. Vega-Lopez

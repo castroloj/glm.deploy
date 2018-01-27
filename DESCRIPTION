@@ -1,12 +1,19 @@
 Package: glm.deploy
 Type: Package
-Title: Generates the source code of the scoring algorithm (predict) of a GLM object to C or JAVA to deploy/operationalize it outside R.
+Title: C and JAVA source code generator for fitted glm objects
 Version: 1.0.0
 Author@s: c(person("Oscar","Castro-Lopez",email="oscarcastro@uas.edu.mx", role=c("aut","cre")), person("Ines", "Vega-Lopez"), role=c("aut","cre"))
 Author: Oscar Castro-Lopez, Ines Vega-Lopez
 Maintainer: Oscar J. Castro-López <oscarcastro@uas.edu.mx>
 License: GPL (>= 2.1)
-Description: The glm.deploy models allows to generate the specific scoring algorithm (predict) of a trained model in C or JAVA source code. Allowing to deploy/operationalize generalized linear models (glm) outside R. It generates two functions: 1) the equivalent to predict(type="response") and 2) the equivalent to predict(type="link").
+Description: The glm.deploy package provides two functions that generate source code implementing the 
+  predict function of fitted glm objects. 
+  In this version, code can be generated for either C or JAVA. The idea is to provide a tool  
+  for the easy and fast deployment of glm predictive models into production. The source code generated 
+  implements two function/methods. One of such functions implements the equivalent to 
+  predict(type="response"), while the second implements predict(type="link"). Source code is written
+  to disk as a .c or .java file in the current working directory, unless an absolute path is specified 
+  for the output filename.
 URL: https://github.com/oscarcastrolopez/glm.deploy
 BugReports: https://github.com/oscarcastrolopez/glm.deploy/issues
 Encoding: UTF-8
