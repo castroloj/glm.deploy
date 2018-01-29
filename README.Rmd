@@ -124,7 +124,7 @@ public class glm_virginica_class{
 
 }
 ```
-To use these methods in another class just add the "import glm_virginica_class.*;"
+To use these methods in another class just add the line "import glm_virginica_class.*;".
 
 ## Notes
 All numeric variables used as input to the glm object are treated as doubles, whereas factor variables are treated as strings.
