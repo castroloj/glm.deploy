@@ -165,7 +165,7 @@ glm.deploy <- function(model, filename = NULL, language) {
 ##' gcc test.c -o test glm_virginica.o -lm
 ##'
 ##' 5) Finally Run the test.o program in linux:
-#' .\test
+#' ./test
 ##'
 glm2c <- function(model, filename = NULL) {
   glm.deploy(model, filename, 0)
