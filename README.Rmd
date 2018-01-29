@@ -93,7 +93,7 @@ int main(int argc, char *argv[]){
 ```
 gcc test.c -o test glm_virginica.o -lm
 ```
-5) Finally Run the test.o program in linux:
+5) Finally run the test.o program in linux:
 ```
 ./test
 ```
@@ -101,7 +101,7 @@ gcc test.c -o test glm_virginica.o -lm
 ```{r example3}
 # Load Package
 library(glm.deploy)
-#Call the glm2c() function:
+#Call the glm2java() function:
 glm2java(model)
 ```
 The `glm2java()` function generates the file "glm_virginica_class.java":
@@ -125,6 +125,9 @@ public class glm_virginica_class{
 }
 ```
 To use these methods in another class just add the "import glm_virginica_class.*;"
+
+## Notes
+All numeric variables used as input to the glm object are treated as doubles, whereas factor variables are treated as strings.
 
 ## Author(s)
   - Oscar J. Castro-Lopez
