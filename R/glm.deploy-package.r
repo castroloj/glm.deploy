@@ -3,8 +3,8 @@
 #' @description   \packageDescription{glm.deploy}
 #' @author
 #' \itemize{
-#'   \item Oscar J. Castro-Lopez \email{oscarcastro@@uas.edu.mx}
-#'   \item Ines F. Vega-Lopez
+#'   \item Oscar J. Castro-Lopez \email{castroloj@@gmail.com}
+#'   \item Ines F. Vega-Lopez \email{ifvega@@uas.edu.mx}
 #' }
 #' @seealso
 #' Functions:

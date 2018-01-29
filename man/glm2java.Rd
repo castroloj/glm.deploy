@@ -13,11 +13,13 @@ glm2java(model, filename = NULL)
 }
 \description{
 The \code{glm2java()} function is used to generate source code in Java language
-implementing a given glm predictive model. It implements the following two functions;
+implementing a given glm predictive model. It implements the following two methods;
  the glm_xxx_response() and glm_xxx_link(), where xxx stands for the name of the target variable
  of the glm object.\cr \cr
-After invocation of the \code{glm2java()} a .java file is generated:\cr
-The two functions are declared a static inside generated java class.
+After invocation of the \code{glm2java()}, a .java file is generated containing the two predict methods which are declared as public static inside a java class called "glm_xxx_class".
+}
+\note{
+All numeric variables used as input to the glm object are treated as doubles, whereas factors variables are treated as strings.
 }
 \examples{
  #Example with the iris dataset with a Logical target and numeric variables, using the binomial family and the logit link function.
@@ -33,7 +35,7 @@ The two functions are declared a static inside generated java class.
  #Call the glm2c() function:
  glm2java(glm(Virginica ~ ., family = binomial(logit), data=iristest))
 
- #The \\code{glm2java()} function generates the file "glm_virginica_class.java":
+ #The glm2java() function generates the file "glm_virginica_class.java":
 
 -------Contents of the "glm_virgninica_class.java" file---------------------------
   package test;
@@ -54,6 +56,11 @@ The two functions are declared a static inside generated java class.
   }
 ---------------End of "glm_virgninica_class.java"------------------------
 -------------------------------------------------------------------------
+To use these methods in another class just add the "import glm_virginica_class.*;"
+
+}
+\seealso{
+\code{\link{glm2java}}
 }
 \author{
 Oscar J. Castro-Lopez, Ines F. Vega-Lopez

@@ -16,14 +16,14 @@ The \code{glm2c()} function is used to generate source code in C language
 implementing a given glm predictive model. It implements the following two functions;
  the glm_xxx_response() and glm_xxx_link(), where xxx stands for the name of the target variable
  of the glm object.\cr \cr
-After invocation of the \code{glm2c()} function two files are generated:\cr
+After the invocation of the \code{glm2c()} function two files are generated:\cr
 \itemize{
-  \item A .c file with the scoring functions.\cr
+  \item A .c file with the two scoring functions.\cr
   \item An .h file with the prototypes of the two functions of the .c file.\cr
  }
 }
 \note{
-All numeric variables used in the glm object are treated as doubles, whereas factors variables are treated as strings.
+All numeric variables used as input to the glm object are treated as doubles, whereas factor variables are treated as strings.
 }
 \examples{
  #Example with the iris dataset with a Logical target and numeric variables, using the binomial family and the logit link function.
@@ -39,7 +39,7 @@ All numeric variables used in the glm object are treated as doubles, whereas fac
  #Call the glm2c() function:
  glm2c(glm(Virginica ~ ., family = binomial(logit), data=iristest))
 
- #The \\code{glm2c()} function generates the files "glm_virginica.c" and "glm_virginica.h":
+ #The glm2c() function generates the files "glm_virginica.c" and "glm_virginica.h":
 
 -------Contents of the "glm_virgninica.c" file---------------------------
 #include <stdlib.h>
@@ -68,13 +68,13 @@ double glm_virginica_response(double sepal_length, double sepal_width, double pe
 --------------------------------------------------------------------------
 
 Usage of the functions in another programs;
-1) We need to add an include line #include "virginica_glm.h" in all program source files that use library definitions.
-2) Link the program .c file with the library object file.
+1) We need to add an include line #include "virginica_glm.h" to all source files that use library definitions.
+2) Link the .c file with the library object file.
     gcc -c glm_virginica.c
 3) The following is an example file "test.c" to call the functions and print the result:
 -------------------"test.c"---------------------------------------------
 #include <stdio.h>
-#include "glm_virgnica.h"
+#include "glm_virgnica.h" //This must be added to call the scoring functions.
 
 int main(int argc, char *argv[]){
   printf("\%f\\n",glm_virginica_link(5.7,2.5,5.0,2.0));

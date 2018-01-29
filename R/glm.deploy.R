@@ -91,15 +91,15 @@ glm.deploy <- function(model, filename = NULL, language) {
 ##' implementing a given glm predictive model. It implements the following two functions;
 ##'  the glm_xxx_response() and glm_xxx_link(), where xxx stands for the name of the target variable
 ##'  of the glm object.\cr \cr
-##' After invocation of the \code{glm2c()} function two files are generated:\cr
+##' After the invocation of the \code{glm2c()} function two files are generated:\cr
 ##' \itemize{
-#'   \item A .c file with the scoring functions.\cr
+#'   \item A .c file with the two scoring functions.\cr
 #'   \item An .h file with the prototypes of the two functions of the .c file.\cr
 #'  }
 ##'
 ##' @param model A fitted object of class "glm".
 ##' @param filename OPTIONAL The name of the output file(s), the default filenames are "glm_xxx.c" and "glm_xxx.h", where xxx is the target variable's name.
-##' @note All numeric variables used in the glm object are treated as doubles, whereas factors variables are treated as strings.
+##' @note All numeric variables used as input to the glm object are treated as doubles, whereas factor variables are treated as strings.
 ##' @seealso \code{\link{glm2java}}
 ##' @author Oscar J. Castro-Lopez, Ines F. Vega-Lopez
 ##' @examples
@@ -116,7 +116,7 @@ glm.deploy <- function(model, filename = NULL, language) {
 #'  #Call the glm2c() function:
 #'  glm2c(glm(Virginica ~ ., family = binomial(logit), data=iristest))
 #'
-#'  #The \code{glm2c()} function generates the files "glm_virginica.c" and "glm_virginica.h":
+#'  #The glm2c() function generates the files "glm_virginica.c" and "glm_virginica.h":
 #'
 #'-------Contents of the "glm_virgninica.c" file---------------------------
 #' #include <stdlib.h>
@@ -145,13 +145,13 @@ glm.deploy <- function(model, filename = NULL, language) {
 #'--------------------------------------------------------------------------
 #'
 ##' Usage of the functions in another programs;
-##' 1) We need to add an include line #include "virginica_glm.h" in all program source files that use library definitions.
-##' 2) Link the program .c file with the library object file.
+##' 1) We need to add an include line #include "virginica_glm.h" to all source files that use library definitions.
+##' 2) Link the .c file with the library object file.
 ##'     gcc -c glm_virginica.c
 ##' 3) The following is an example file "test.c" to call the functions and print the result:
 #'-------------------"test.c"---------------------------------------------
 #' #include <stdio.h>
-#' #include "glm_virgnica.h"
+#' #include "glm_virgnica.h" //This must be added to call the scoring functions.
 #'
 #' int main(int argc, char *argv[]){
 #'   printf("%f\n",glm_virginica_link(5.7,2.5,5.0,2.0));
@@ -174,13 +174,14 @@ glm2c <- function(model, filename = NULL) {
 #' @name glm2java
 #' @title Java source code generator for rapid deployment of glm predictive models
 ##' @description The \code{glm2java()} function is used to generate source code in Java language
-##' implementing a given glm predictive model. It implements the following two functions;
+##' implementing a given glm predictive model. It implements the following two methods;
 ##'  the glm_xxx_response() and glm_xxx_link(), where xxx stands for the name of the target variable
 ##'  of the glm object.\cr \cr
-##' After invocation of the \code{glm2java()} a .java file is generated:\cr
-##' The two functions are declared a static inside a generated java class.
+##' After invocation of the \code{glm2java()}, a .java file is generated containing the two predict methods which are declared as public static inside a java class called "glm_xxx_class".
 ##' @param model A fitted object of class "glm".
 ##' @param filename OPTIONAL The name of the output file, the default file name is  "glm_xxx_class.java", where xxx is the target variable's name.
+##' @note All numeric variables used as input to the glm object are treated as doubles, whereas factors variables are treated as strings.
+##' @seealso \code{\link{glm2java}}
 ##' @author Oscar J. Castro-Lopez, Ines F. Vega-Lopez
 ##' @examples
 #'  #Example with the iris dataset with a Logical target and numeric variables, using the binomial family and the logit link function.
@@ -196,7 +197,7 @@ glm2c <- function(model, filename = NULL) {
 #'  #Call the glm2c() function:
 #'  glm2java(glm(Virginica ~ ., family = binomial(logit), data=iristest))
 #'
-#'  #The \code{glm2java()} function generates the file "glm_virginica_class.java":
+#'  #The glm2java() function generates the file "glm_virginica_class.java":
 #'
 #'-------Contents of the "glm_virgninica_class.java" file---------------------------
 #'   package test;
@@ -217,6 +218,8 @@ glm2c <- function(model, filename = NULL) {
 #'   }
 #'---------------End of "glm_virgninica_class.java"------------------------
 #'-------------------------------------------------------------------------
+#'To use these methods in another class just add the "import glm_virginica_class.*;"
+#'
 glm2java <- function(model, filename = NULL) {
   glm.deploy(model, filename, 1)
 }

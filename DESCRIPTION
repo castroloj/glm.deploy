@@ -2,18 +2,18 @@ Package: glm.deploy
 Type: Package
 Title: C and JAVA source code generator for fitted glm objects
 Version: 1.0.0
-Author@s: c(person("Oscar","Castro-Lopez",email="oscarcastro@uas.edu.mx", role=c("aut","cre")), person("Ines", "Vega-Lopez"), role=c("aut","cre"))
+Author@s: c(person("Oscar","Castro-Lopez",email="castroloj@gmail.com", role=c("aut","cre")), person("Ines", "Vega-Lopez"),email="ifvega@uas.edu.mx", role=c("aut","cre"))
 Author: Oscar Castro-Lopez, Ines Vega-Lopez
-Maintainer: Oscar J. Castro-López <oscarcastro@uas.edu.mx>
+Maintainer: Oscar J. Castro-López <castroloj@gmail.com>
 License: GPL (>= 2.1)
 Description: The glm.deploy package provides two functions that generate source code implementing the 
   predict function of fitted glm objects. 
   In this version, code can be generated for either C or JAVA. The idea is to provide a tool  
   for the easy and fast deployment of glm predictive models into production. The source code generated 
-  implements two function/methods. One of such functions implements the equivalent to 
+  by this package implements two function/methods. One of such functions implements the equivalent to 
   predict(type="response"), while the second implements predict(type="link"). Source code is written
   to disk as a .c or .java file in the current working directory, unless an absolute path is specified 
-  for the output filename.
+  for the output filename. In the case of c, an .h file is also generated.
 URL: https://github.com/oscarcastrolopez/glm.deploy
 BugReports: https://github.com/oscarcastrolopez/glm.deploy/issues
 Encoding: UTF-8
