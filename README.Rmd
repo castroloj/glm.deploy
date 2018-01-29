@@ -1,8 +1,3 @@
----
-output:
-  html_document: default
-  pdf_document: default
----
 # glm.deploy
 
 C and JAVA source code generator for fitted glm objects
@@ -133,6 +128,5 @@ public class glm_virginica_class{
 To use these methods in another class just add the "import glm_virginica_class.*;"
 
 ## Author(s)
-
--Oscar J. Castro-Lopez
--Ines F. Vega-Lopez
+  - Oscar J. Castro-Lopez
+  - Ines F. Vega-Lopez
