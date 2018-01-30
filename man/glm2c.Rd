@@ -88,7 +88,7 @@ int main(int argc, char *argv[]){
 gcc test.c -o test glm_virginica.o -lm
 
 5) Finally Run the test.o program in linux:
-.\\test
+./test
 
 }
 \seealso{

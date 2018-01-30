@@ -1,11 +1,11 @@
 Package: glm.deploy
 Type: Package
-Title: C and JAVA source code generator for fitted glm objects
+Title: C and JAVA Source Code Generator for Fitted Glm Objects
 Version: 1.0.0
-Author@s: c(person("Oscar","Castro-Lopez",email="castroloj@gmail.com", role=c("aut","cre")), person("Ines", "Vega-Lopez"),email="ifvega@uas.edu.mx", role=c("aut","cre"))
+Authors@R: c(person("Oscar","Castro-Lopez",email="castroloj@gmail.com", role=c("aut","cre")), person("Ines", "Vega-Lopez"),email="ifvega@uas.edu.mx", role=c("aut","cre"))
 Author: Oscar Castro-Lopez, Ines Vega-Lopez
 Maintainer: Oscar J. Castro-López <castroloj@gmail.com>
-License: GPL (>= 2.1)
+License: GPL (>= 3.0)
 Description: The glm.deploy package provides two functions that generate source code implementing the 
   predict function of fitted glm objects. 
   In this version, code can be generated for either C or JAVA. The idea is to provide a tool  
@@ -21,7 +21,4 @@ LazyData: true
 Imports: Rcpp (>= 0.12.12)
 LinkingTo: Rcpp
 RoxygenNote: 6.0.1
-Suggests: knitr,
-    rmarkdown,
-    testthat
-VignetteBuilder: knitr
+Suggests: knitr, rmarkdown, testthat
