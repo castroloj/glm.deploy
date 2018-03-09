@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // glmdeploy_cpp
-void glmdeploy_cpp(DataFrame dataFields, CharacterVector arguments, CharacterVector family, CharacterVector link_function, CharacterVector interceptname, bool hasfactors, CharacterVector filename_in, int outlanguage);
-RcppExport SEXP _glm_deploy_glmdeploy_cpp(SEXP dataFieldsSEXP, SEXP argumentsSEXP, SEXP familySEXP, SEXP link_functionSEXP, SEXP interceptnameSEXP, SEXP hasfactorsSEXP, SEXP filename_inSEXP, SEXP outlanguageSEXP) {
+void glmdeploy_cpp(DataFrame dataFields, CharacterVector arguments, CharacterVector family, CharacterVector link_function, CharacterVector interceptname, bool hasfactors, CharacterVector filename_in, int outlanguage, CharacterVector path_in);
+RcppExport SEXP _glm_deploy_glmdeploy_cpp(SEXP dataFieldsSEXP, SEXP argumentsSEXP, SEXP familySEXP, SEXP link_functionSEXP, SEXP interceptnameSEXP, SEXP hasfactorsSEXP, SEXP filename_inSEXP, SEXP outlanguageSEXP, SEXP path_inSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type dataFields(dataFieldsSEXP);
@@ -18,13 +18,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type hasfactors(hasfactorsSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type filename_in(filename_inSEXP);
     Rcpp::traits::input_parameter< int >::type outlanguage(outlanguageSEXP);
-    glmdeploy_cpp(dataFields, arguments, family, link_function, interceptname, hasfactors, filename_in, outlanguage);
+    Rcpp::traits::input_parameter< CharacterVector >::type path_in(path_inSEXP);
+    glmdeploy_cpp(dataFields, arguments, family, link_function, interceptname, hasfactors, filename_in, outlanguage, path_in);
     return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_glm_deploy_glmdeploy_cpp", (DL_FUNC) &_glm_deploy_glmdeploy_cpp, 8},
+    {"_glm_deploy_glmdeploy_cpp", (DL_FUNC) &_glm_deploy_glmdeploy_cpp, 9},
     {NULL, NULL, 0}
 };
 

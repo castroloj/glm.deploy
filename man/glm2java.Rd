@@ -4,12 +4,14 @@
 \alias{glm2java}
 \title{Java source code generator for rapid deployment of glm predictive models}
 \usage{
-glm2java(model, filename = NULL)
+glm2java(model, filename = NULL, path = NULL)
 }
 \arguments{
 \item{model}{A fitted object of class "glm".}
 
 \item{filename}{OPTIONAL The name of the output file, the default file name is  "glm_xxx_class.java", where xxx is the target variable's name.}
+
+\item{path}{The directory path where files are going to be saved.}
 }
 \description{
 The \code{glm2java()} function is used to generate source code in Java language
@@ -22,7 +24,8 @@ After invocation of the \code{glm2java()}, a .java file is generated containing 
 All numeric variables used as input to the glm object are treated as doubles, whereas factors variables are treated as strings.
 }
 \examples{
- #Example with the iris dataset with a Logical target and numeric variables, using the binomial family and the logit link function.
+ # Example with the iris dataset with a Logical target and numeric
+ # variables, using the binomial family and the logit link function
  data(iris)
  iristest = iris
  iristest$Virginica = ifelse(iristest$Species == 'virginica', TRUE,FALSE)
@@ -30,38 +33,56 @@ All numeric variables used as input to the glm object are treated as doubles, wh
 
  # Load Package
  library(glm.deploy)
- #For repeatable results:
+ # For repeatable results
  set.seed(123)
- #Call the glm2c() function:
- glm2java(glm(Virginica ~ ., family = binomial(logit), data=iristest))
+ # Generate the fitted glm object
+ m = glm(Virginica ~ ., family = binomial(logit), data=iristest)
+ # Call the glm2java() function with default filename
+ glm2java(m,, tempdir())
+ # Call the glm2java() function with custom filename
+ glm2java(m,'my_glm_virginica', tempdir())
 
- #The glm2java() function generates the file "glm_virginica_class.java":
+ # The glm2java() function generates the file "glm_virginica_class.java".
 
--------Contents of the "glm_virgninica_class.java" file---------------------------
+\dontrun{
+----------Contents of the "glm_virgninica_class.java" file-------
   package test;
   public class glm_virginica_class{
 
-  public static double glm_virginica_link(double sepal_length, double sepal_width, double petal_length, double petal_width){
+  public static double glm_virginica_link(double sepal_length,
+                                          double sepal_width,
+                                          double petal_length,
+                                          double petal_width){
       double new_sepal_length = -2.46522019518341 * sepal_length;
       double new_sepal_width = -6.68088701405762 * sepal_width;
       double new_petal_length = 9.4293851538836 * petal_length;
       double new_petal_width = 18.2861368877881 * petal_width;
 
-      return -42.6378038127854+new_sepal_length+new_sepal_width+new_petal_length+new_petal_width;
+      return -42.6378038127854+new_sepal_length+
+                               new_sepal_width+
+                               new_petal_length+
+                               new_petal_width;
     }
-    public static double glm_virginica_response(double sepal_length, double sepal_width, double petal_length, double petal_width){
-      return 1/(1+Math.exp(-glm_virginica_link(sepal_length, sepal_width, petal_length, petal_width)));
+    public static double glm_virginica_response(double sepal_length,
+                                                double sepal_width,
+                                                double petal_length,
+                                                double petal_width){
+      return 1/(1+Math.exp(-glm_virginica_link(sepal_length,
+                                               sepal_width,
+                                               petal_length,
+                                               petal_width)));
     }
 
   }
----------------End of "glm_virgninica_class.java"------------------------
--------------------------------------------------------------------------
-To use these methods in another class just add the "import glm_virginica_class.*;"
-
+---------------End of "glm_virgninica_class.java"---------------
+----------------------------------------------------------------
+To use these methods in another class just add
+the "import glm_virginica_class.*;"
+}
 }
 \seealso{
 \code{\link{glm2java}}
 }
 \author{
-Oscar J. Castro-Lopez, Ines F. Vega-Lopez
+Oscar Castro-Lopez, Ines Vega-Lopez
 }

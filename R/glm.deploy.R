@@ -15,7 +15,7 @@
 # GNU General Public License for more details (http://www.gnu.org/licenses/).
 ######################################################################################
 
-glm.deploy <- function(model, filename = NULL, language) {
+glm.deploy <- function(model, filename = NULL, language, path = NULL) {
   if (!inherits(model, "glm"))
     stop("ERROR: Not a glm object")
 
@@ -71,8 +71,9 @@ glm.deploy <- function(model, filename = NULL, language) {
     Factorname = Factorsname
   )
   if (is.null(filename)) {
-    filename = ""
+    filename = paste0('glm_',Intercept_label)
   }
+
   glmdeploy_cpp(
     tbl,
     Arguments,
@@ -81,7 +82,8 @@ glm.deploy <- function(model, filename = NULL, language) {
     Intercept_label,
     hasfactor,
     filename,
-    language
+    language,
+    path
   )
 }
 
@@ -99,11 +101,14 @@ glm.deploy <- function(model, filename = NULL, language) {
 ##'
 ##' @param model A fitted object of class "glm".
 ##' @param filename OPTIONAL The name of the output file(s), the default filenames are "glm_xxx.c" and "glm_xxx.h", where xxx is the target variable's name.
+##' @param path The directory path where files are going to be saved.
 ##' @note All numeric variables used as input to the glm object are treated as doubles, whereas factor variables are treated as strings.
 ##' @seealso \code{\link{glm2java}}
-##' @author Oscar J. Castro-Lopez, Ines F. Vega-Lopez
+##' @author Oscar Castro-Lopez, Ines Vega-Lopez
 ##' @examples
-#'  #Example with the iris dataset with a Logical target and numeric variables, using the binomial family and the logit link function.
+##'
+#'  # Example with the iris dataset with a Logical target and numeric variables,
+#'  # using the binomial family and the logit link function
 #'  data(iris)
 #'  iristest = iris
 #'  iristest$Virginica = ifelse(iristest$Species == 'virginica', TRUE,FALSE)
@@ -111,64 +116,98 @@ glm.deploy <- function(model, filename = NULL, language) {
 #'
 #'  # Load Package
 #'  library(glm.deploy)
-#'  #For repeatable results:
+#'  # For repeatable results
 #'  set.seed(123)
-#'  #Call the glm2c() function:
-#'  glm2c(glm(Virginica ~ ., family = binomial(logit), data=iristest))
+#'  # Generate the fitted glm object
+#'  m = glm(Virginica ~ ., family = binomial(logit), data=iristest)
+#'  # Call the glm2c() function with default filename
+#'  glm2c(m,,tempdir())
 #'
-#'  #The glm2c() function generates the files "glm_virginica.c" and "glm_virginica.h":
+#'  # Call the glm2c() function with custom filename
+#'  glm2c(m,'my_glm_virginica', tempdir())
 #'
-#'-------Contents of the "glm_virgninica.c" file---------------------------
+#'  # The glm2c() function generates the files: "glm_virginica.c" and
+#'  # "glm_virginica.h"
+#'
+#'\dontrun{
+#'---------------Contents of the "glm_virgninica.c" file---------------
+#'
 #' #include <stdlib.h>
 #' #include <stdio.h>
 #' #include <string.h>
 #' #include <math.h>
 #'
-#' double glm_virginica_link(double sepal_length, double sepal_width, double petal_length, double petal_width){
+#' double glm_virginica_link(double sepal_length,
+#'                           double sepal_width,
+#'                           double petal_length,
+#'                           double petal_width){
 #'   double new_sepal_length = -2.46522019518341 * sepal_length;
 #'   double new_sepal_width = -6.68088701405762 * sepal_width;
 #'   double new_petal_length = 9.4293851538836 * petal_length;
 #'   double new_petal_width = 18.2861368877881 * petal_width;
 #'
-#'   return -42.6378038127854+new_sepal_length+new_sepal_width+new_petal_length+new_petal_width;
+#'   return -42.6378038127854+new_sepal_length+
+#'                            new_sepal_width+
+#'                            new_petal_length+
+#'                            new_petal_width;
 #' }
-#' double glm_virginica_response(double sepal_length, double sepal_width, double petal_length, double petal_width){
-#'   return 1/(1+exp(-glm_virginica_link(sepal_length, sepal_width, petal_length, petal_width)));
+#' double glm_virginica_response(double sepal_length,
+#'                               double sepal_width,
+#'                               double petal_length,
+#'                               double petal_width){
+#'   return 1/(1+exp(-glm_virginica_link(sepal_length,
+#'                                       sepal_width,
+#'                                       petal_length,
+#'                                       petal_width)));
 #' }
-#'----End of Contents of the "glm_virgninica.c" file------------------------
-#'--------------------------------------------------------------------------
+#'----End of Contents of the "glm_virgninica.c" file------------------
+#'--------------------------------------------------------------------
 #'
-#'-----Contents of the "glm_virgninica.h" file------------------------------
-#' double glm_virginica_link(double sepal_length, double sepal_width, double petal_length, double petal_width);
-#' double glm_virginica_response(double sepal_length, double sepal_width, double petal_length, double petal_width);
-#'-----End of Contents of the "glm_virgninica.h" file-----------------------
-#'--------------------------------------------------------------------------
+#'-----Contents of the "glm_virgninica.h" file------------------------
+#' double glm_virginica_link(double sepal_length,
+#'                           double sepal_width,
+#'                           double petal_length,
+#'                           double petal_width);
+#' double glm_virginica_response(double sepal_length,
+#'                               double sepal_width,
+#'                               double petal_length,
+#'                               double petal_width);
+#'-----End of Contents of the "glm_virgninica.h" file-----------------
+#'--------------------------------------------------------------------
 #'
 ##' Usage of the functions in another programs;
-##' 1) We need to add an include line #include "virginica_glm.h" to all source files that use library definitions.
+##' 1) We need to add an include line #include "virginica_glm.h" to all
+##' source files that use library definitions.
 ##' 2) Link the .c file with the library object file.
 ##'     gcc -c glm_virginica.c
-##' 3) The following is an example file "test.c" to call the functions and print the result:
-#'-------------------"test.c"---------------------------------------------
+##' 3) The following is an example file "test.c" to call the functions
+##' and print the result:
+#'
+#'-------------------"test.c"---------------
 #' #include <stdio.h>
-#' #include "glm_virgnica.h" //This must be added to call the scoring functions.
+#' #include "glm_virgnica.h" //Added to call the scoring functions.
 #'
 #' int main(int argc, char *argv[]){
 #'   printf("%f\n",glm_virginica_link(5.7,2.5,5.0,2.0));
 #'   printf("%f\n",glm_virginica_response(5.7,2.5,5.0,2.0));
 #'   return 0;
 #' }
-#'---------------End of "test.c"-------------------------------------------
-#'-------------------------------------------------------------------------
+#'---------------End of "test.c"---------------
+#'---------------------------------------------
 #'
-##' 4) Compile the "test.c" file and link it to the glm_virginica shared library, we also need to add the "-lm" option to link it to the math.h library:
+##' 4) Compile the "test.c" file and link it to the glm_virginica shared
+##' library, we also need to add the "-lm" option to link it to the
+##' math.h library:
 ##' gcc test.c -o test glm_virginica.o -lm
 ##'
 ##' 5) Finally Run the test.o program in linux:
-#' ./test
-##'
-glm2c <- function(model, filename = NULL) {
-  glm.deploy(model, filename, 0)
+##' ./test
+##' }
+glm2c <- function(model, filename = NULL, path = NULL) {
+  if(is.null(path))
+    stop("ERROR: A directory path must be provided")
+
+  glm.deploy(model, filename, 0, path)
 }
 
 #' @name glm2java
@@ -180,11 +219,13 @@ glm2c <- function(model, filename = NULL) {
 ##' After invocation of the \code{glm2java()}, a .java file is generated containing the two predict methods which are declared as public static inside a java class called "glm_xxx_class".
 ##' @param model A fitted object of class "glm".
 ##' @param filename OPTIONAL The name of the output file, the default file name is  "glm_xxx_class.java", where xxx is the target variable's name.
+##' @param path The directory path where files are going to be saved.
 ##' @note All numeric variables used as input to the glm object are treated as doubles, whereas factors variables are treated as strings.
 ##' @seealso \code{\link{glm2java}}
-##' @author Oscar J. Castro-Lopez, Ines F. Vega-Lopez
+##' @author Oscar Castro-Lopez, Ines Vega-Lopez
 ##' @examples
-#'  #Example with the iris dataset with a Logical target and numeric variables, using the binomial family and the logit link function.
+#'  # Example with the iris dataset with a Logical target and numeric
+#'  # variables, using the binomial family and the logit link function
 #'  data(iris)
 #'  iristest = iris
 #'  iristest$Virginica = ifelse(iristest$Species == 'virginica', TRUE,FALSE)
@@ -192,34 +233,54 @@ glm2c <- function(model, filename = NULL) {
 #'
 #'  # Load Package
 #'  library(glm.deploy)
-#'  #For repeatable results:
+#'  # For repeatable results
 #'  set.seed(123)
-#'  #Call the glm2c() function:
-#'  glm2java(glm(Virginica ~ ., family = binomial(logit), data=iristest))
+#'  # Generate the fitted glm object
+#'  m = glm(Virginica ~ ., family = binomial(logit), data=iristest)
+#'  # Call the glm2java() function with default filename
+#'  glm2java(m,, tempdir())
+#'  # Call the glm2java() function with custom filename
+#'  glm2java(m,'my_glm_virginica', tempdir())
 #'
-#'  #The glm2java() function generates the file "glm_virginica_class.java":
+#'  # The glm2java() function generates the file "glm_virginica_class.java".
 #'
-#'-------Contents of the "glm_virgninica_class.java" file---------------------------
+#'\dontrun{
+#'----------Contents of the "glm_virgninica_class.java" file-------
 #'   package test;
 #'   public class glm_virginica_class{
 #'
-#'   public static double glm_virginica_link(double sepal_length, double sepal_width, double petal_length, double petal_width){
+#'   public static double glm_virginica_link(double sepal_length,
+#'                                           double sepal_width,
+#'                                           double petal_length,
+#'                                           double petal_width){
 #'       double new_sepal_length = -2.46522019518341 * sepal_length;
 #'       double new_sepal_width = -6.68088701405762 * sepal_width;
 #'       double new_petal_length = 9.4293851538836 * petal_length;
 #'       double new_petal_width = 18.2861368877881 * petal_width;
 #'
-#'       return -42.6378038127854+new_sepal_length+new_sepal_width+new_petal_length+new_petal_width;
+#'       return -42.6378038127854+new_sepal_length+
+#'                                new_sepal_width+
+#'                                new_petal_length+
+#'                                new_petal_width;
 #'     }
-#'     public static double glm_virginica_response(double sepal_length, double sepal_width, double petal_length, double petal_width){
-#'       return 1/(1+Math.exp(-glm_virginica_link(sepal_length, sepal_width, petal_length, petal_width)));
+#'     public static double glm_virginica_response(double sepal_length,
+#'                                                 double sepal_width,
+#'                                                 double petal_length,
+#'                                                 double petal_width){
+#'       return 1/(1+Math.exp(-glm_virginica_link(sepal_length,
+#'                                                sepal_width,
+#'                                                petal_length,
+#'                                                petal_width)));
 #'     }
 #'
 #'   }
-#'---------------End of "glm_virgninica_class.java"------------------------
-#'-------------------------------------------------------------------------
-#'To use these methods in another class just add the "import glm_virginica_class.*;"
-#'
-glm2java <- function(model, filename = NULL) {
-  glm.deploy(model, filename, 1)
+#'---------------End of "glm_virgninica_class.java"---------------
+#'----------------------------------------------------------------
+#' To use these methods in another class just add
+#' the "import glm_virginica_class.*;"
+#' }
+glm2java <- function(model, filename = NULL, path = NULL) {
+  if(is.null(path))
+    stop("ERROR: A directory path must be provided")
+  glm.deploy(model, filename, 1, path)
 }
