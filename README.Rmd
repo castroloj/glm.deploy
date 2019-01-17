@@ -1,4 +1,10 @@
-# glm.deploy [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/glm.deploy)](https://cran.r-project.org/package=glm.deploy) [![packageversion](https://img.shields.io/badge/Package%20version-glm.deploy-orange.svg?style=flat-square)](commits/master) [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)[![CRAN_Downloads](https://cranlogs.r-pkg.org/badges/grand-total/glm.deploy)](https://cran.r-project.org/package=glm.deploy)
+# glm.deploy 
+<!-- badges: start -->
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/glm.deploy)](https://cran.r-project.org/package=glm.deploy)
+[![packageversion](https://img.shields.io/badge/Package%20version-glm.deploy-orange.svg?style=flat-square)](commits/master)
+[![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![CRAN_Downloads](https://cranlogs.r-pkg.org/badges/grand-total/glm.deploy)](https://cran.r-project.org/package=glm.deploy)
+<!-- badges: end -->
 
 'C' and 'Java' Source Code Generator for Fitted Glm Objects
 
